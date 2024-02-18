@@ -115,14 +115,16 @@ use reqwest::*;
 
 #[tokio::main]
 async fn generate_number(max_range: u32) -> Result<u32> {
-    let body = reqwest::get(
-        "https://www.random.org/integers?num=1&min=1&max={MAX}
-&col=1&base=10&format=plain&rnd=new"
-            .replace("{MAX}", &max_range.to_string()),
-    )
-    .await?
-    .text()
-    .await?;
+    // path has to be w.r.t `Cargo.toml` file
+    dotenv::from_path("../.env").expect("Failed to load .env file");
+    let url = std::env::var("URL")
+        .expect("URL var not found")
+        .replace("{MAX}", &max_range.to_string());
+    
+    let body = reqwest::get(url)
+        .await?
+        .text()
+        .await?;
 
     let val = body.trim().parse::<u32>().expect("Error in parsing");
     println!("value = {}", val);

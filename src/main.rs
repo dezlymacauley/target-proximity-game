@@ -71,6 +71,27 @@ fn collect_input<T: std::str::FromStr>(prompt: &str) -> T {
 
 }
 
+fn collect_players() -> Vec<Player> {
+    let mut players: Vec<Player> = Vec::new();
+    let mut num_players = 0;
+
+    loop {
+        num_players = collect_input::<u32>("How many players (≥ 2)?");
+        if num_players < 2 {
+            println!("Invalid. Please try again");
+            continue;
+        } 
+
+        break;
+    }
+    
+    for i in 1..=num_players {
+        let name:String = collect_input(format!("Player {} name:", i).as_str());
+        players.push(Player {name, score: 0});
+    }
+    players
+
+}
 
 
 // NOTE: Ownership and references in Rust
